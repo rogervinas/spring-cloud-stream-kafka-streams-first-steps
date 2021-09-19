@@ -213,7 +213,9 @@ override fun apply(input: KStream<String, ScoreEvent>): KStream<String, TotalSco
 }
 ```
 
-That's it! Happy coding!
+Now you can play around with [Kafka Streams DSL](https://kafka.apache.org/documentation/streams/developer-guide/dsl-api) and do more complicated stuff!
+
+Happy coding!
 
 ## Test this demo
 
