@@ -58,7 +58,7 @@ fun `should publish total scores`() {
   kafkaProducerHelper.send(TOPIC_SCORES, USERNAME_1, "{\"score\": 1}")
   kafkaProducerHelper.send(TOPIC_SCORES, USERNAME_2, "{\"score\": 1}")
 
-  val records = kafkaConsumerHelper.consumeAtLeast(2, Duration.ofSeconds(30))
+  val records = kafkaConsumerHelper.consumeAtLeast(2, Duration.ofMinutes(1))
 
   assertThat(records).hasSize(2)
   assertThat(records.associate { record -> record.key() to record.value() }).satisfies { valuesByKey ->
