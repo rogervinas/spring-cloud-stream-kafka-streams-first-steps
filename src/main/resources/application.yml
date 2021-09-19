@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: "spring-cloud-stream-kafka-streams-first-steps"
+  cloud:
+    stream:
+      function:
+        definition: totalScoreProcessor
+        bindings:
+          totalScoreProcessor-in-0: "pub.scores"
+          totalScoreProcessor-out-0: "pub.totals"
+      kafka:
+        streams:
+          binder:
+            applicationId: "${spring.application.name}"
+            brokers: "localhost:9094"
+            configuration:
+              default:
+                key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+                value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+
+total-score:
+  window: PT10S
