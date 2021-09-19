@@ -138,7 +138,9 @@ This implementation is not fulfilling our goal yet, just execute [MyApplicationI
 ### TotalScoreProcessor test using kafka-streams-test-utils
 
 Using the [Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html#TheTestPyramid) principle we should use **integration tests** to test the simple test cases and test the more complicated ones using **unit tests** (if not **unit tests** at least less "integrated" tests).
+
 To create these less "integrated" tests we can use [kafka-streams-test-utils](https://kafka.apache.org/documentation/streams/developer-guide/testing.html).
+
 They will be faster and more reliable (not needing **Kafka**) and with some cool features like "advance time" to simulate messages published at different instants in time.
 
 Here it is one way to create a **TopologyTestDriver** from [kafka-streams-test-utils](https://kafka.apache.org/documentation/streams/developer-guide/testing.html) to test our **TotalScoreProcessor**:
