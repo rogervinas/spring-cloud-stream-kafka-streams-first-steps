@@ -203,7 +203,7 @@ override fun apply(input: KStream<String, ScoreEvent>): KStream<String, TotalSco
     .aggregate(
       { TotalScoreEvent(0) },
       { _, scoreEvent, totalScoreEvent -> TotalScoreEvent(scoreEvent.score + totalScoreEvent.totalScore) },
-      Materialized.**as**<String?, TotalScoreEvent?, WindowStore<Bytes, ByteArray>?>("total-score")
+      Materialized.`as`<String?, TotalScoreEvent?, WindowStore<Bytes, ByteArray>?>("total-score")
         .withKeySerde(Serdes.StringSerde())
         .withValueSerde(JsonSerde(TotalScoreEvent::class.java))
     )
