@@ -213,6 +213,8 @@ override fun apply(input: KStream<String, ScoreEvent>): KStream<String, TotalSco
 }
 ```
 
+Note that we use the [suppression operator](https://kafka.apache.org/27/documentation/streams/developer-guide/dsl-api.html#window-final-results) to emit nothing for a window until it closes, and then emit the final result. If we were not using it we would have an output message for each input message.
+
 Now you can play around with [Kafka Streams DSL](https://kafka.apache.org/documentation/streams/developer-guide/dsl-api) and do more complicated stuff!
 
 Happy coding!
