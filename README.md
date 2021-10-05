@@ -27,7 +27,7 @@ A bit of documentation to start with:
 
 (this demo uses **Spring Cloud 2020.0.3** that adds **Kafka Streams 2.7.1**)
 
-### Goal
+## Goal
 
 We want to implement this flow:
 
@@ -36,7 +36,7 @@ We want to implement this flow:
 1. We receive messages with key = username and value = { score: number } from topic **pub.scores**
 2. We have to calculate the **total score** received by username on fixed windows of 10 seconds and send it to topic **pub.totals**
 
-### Integration Test
+## Integration Test
 
 First we create a project using this [spring initializr configuration](https://start.spring.io/#!type=gradle-project&language=kotlin&platformVersion=2.5.4&packaging=jar&jvmVersion=11&groupId=com.rogervinas&artifactId=springcloudstreamkafkastreamsbinder&name=springcloudstreamkafkastreamsbinder&description=Spring%20Cloud%20Streams%20%26%20Kafka%20Streams%20Binder&packageName=com.rogervinas.springcloudstreamkafkastreamsbinder&dependencies=cloud-stream) and we add **Kafka Streams** binder dependency **spring-cloud-stream-binder-kafka-streams**.
 
@@ -76,7 +76,7 @@ In other words, what we are really implementing is:
 
 ![Diagram2](doc/diagram2.png)
 
-### Kafka Streams binder configuration
+## Kafka Streams binder configuration
 
 Next we configure the **Kafka Streams binder**:
 
@@ -135,7 +135,7 @@ class MyApplicationConfiguration {
 
 This implementation is not fulfilling our goal yet, just execute [MyApplicationIntegrationTest](src/test/kotlin/com/rogervinas/kafkastreams/MyApplicationIntegrationTest.kt) and see it still failing! 😓
 
-### TotalScoreProcessor test using kafka-streams-test-utils
+## TotalScoreProcessor test using kafka-streams-test-utils
 
 Using the [Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html#TheTestPyramid) principle we should use **integration tests** to test the simple test cases and test the more complicated ones using **unit tests** (if not **unit tests** at least less "integrated" tests).
 
@@ -191,7 +191,7 @@ fun `should publish total score of one username when window expires`() {
 }
 ```
 
-### Final implementation
+## Final implementation
 
 After a few iterations your **TotalScoreProcessor** implementation should look similar to this:
 
