@@ -14,6 +14,7 @@ import org.springframework.kafka.support.serializer.JsonDeserializer
 import org.springframework.kafka.support.serializer.JsonSerde
 import java.time.Duration
 import java.util.Properties
+import java.util.function.Consumer
 
 private const val TOPIC_IN = "topic.in"
 private const val TOPIC_OUT = "topic.out"
@@ -34,8 +35,8 @@ internal class MyTotalScoreProcessorTest {
     val streamsBuilder = StreamsBuilder()
 
     MyTotalScoreProcessor(TOTAL_SCORE_WINDOW)
-      .apply(streamsBuilder.stream(TOPIC_IN))
-      .to(TOPIC_OUT)
+          .apply(streamsBuilder.stream(TOPIC_IN))
+          .to(TOPIC_OUT)
 
     val config = Properties().apply {
       setProperty(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, stringSerde.javaClass.name)
@@ -66,10 +67,10 @@ internal class MyTotalScoreProcessorTest {
     // Send at least one more message so the previous window is closed
     topicIn.pipeInput(USERNAME_1, ScoreEvent(1))
 
-    assertThat(topicOut.readKeyValuesToList()).singleElement().satisfies { topicOutMessage ->
+    assertThat(topicOut.readKeyValuesToList()).singleElement().satisfies(Consumer { topicOutMessage ->
       assertThat(topicOutMessage.key).isEqualTo(USERNAME_1)
       assertThat(topicOutMessage.value).isEqualTo(TotalScoreEvent(75))
-    }
+    })
   }
 
   @Test
@@ -88,10 +89,10 @@ internal class MyTotalScoreProcessorTest {
     topicIn.pipeInput(USERNAME_2, ScoreEvent(1))
 
     assertThat(topicOut.queueSize).isEqualTo(2)
-    assertThat(topicOut.readKeyValuesToMap()).satisfies { topicOutMessages ->
+    assertThat(topicOut.readKeyValuesToMap()).satisfies(Consumer { topicOutMessages ->
       assertThat(topicOutMessages[USERNAME_1]).isEqualTo(TotalScoreEvent(75))
       assertThat(topicOutMessages[USERNAME_2]).isEqualTo(TotalScoreEvent(86))
-    }
+    })
   }
 
   @Test
@@ -113,10 +114,10 @@ internal class MyTotalScoreProcessorTest {
     topicIn.pipeInput(USERNAME_2, ScoreEvent(48))
 
     assertThat(topicOut.queueSize).isEqualTo(2)
-    assertThat(topicOut.readKeyValuesToMap()).satisfies { topicOutMessages ->
+    assertThat(topicOut.readKeyValuesToMap()).satisfies(Consumer { topicOutMessages ->
       assertThat(topicOutMessages[USERNAME_1]).isEqualTo(TotalScoreEvent(75))
       assertThat(topicOutMessages[USERNAME_2]).isEqualTo(TotalScoreEvent(86))
-    }
+    })
 
     topicIn.advanceTime(TOTAL_SCORE_WINDOW.plusMillis(100))
 
@@ -125,9 +126,9 @@ internal class MyTotalScoreProcessorTest {
     topicIn.pipeInput(USERNAME_2, ScoreEvent(1))
 
     assertThat(topicOut.queueSize).isEqualTo(2)
-    assertThat(topicOut.readKeyValuesToMap()).satisfies { topicOutMessages ->
+    assertThat(topicOut.readKeyValuesToMap()).satisfies(Consumer { topicOutMessages ->
       assertThat(topicOutMessages[USERNAME_1]).isEqualTo(TotalScoreEvent(84))
       assertThat(topicOutMessages[USERNAME_2]).isEqualTo(TotalScoreEvent(95))
-    }
+    })
   }
 }
