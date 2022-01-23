@@ -260,4 +260,4 @@ echo 'john:{"score":100}' | kcat -b localhost:9094 -P -t pub.scores -K:
 
 :octocat: [Spring Cloud Stream Multibinder](https://github.com/rogervinas/spring-cloud-stream-multibinder)
 
-:octocat: [Spring Cloud Stream & Kafka Streams Processor](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-processor)
+:octocat: [Spring Cloud Stream & Kafka Streams Binder + Processor API](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-processor)
