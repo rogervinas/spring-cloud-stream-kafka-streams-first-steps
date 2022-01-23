@@ -15,6 +15,17 @@ You can also check out [Spring Cloud Stream step by step](https://github.com/rog
 
 Let's try this time a simple example using **Kafka Streams binder**! 🤩
 
+* [First steps](#first-steps)
+* [Goal](#goal)
+* [Integration Test](#integration-test)
+* [Kafka Streams binder configuration](#kafka-streams-binder-configuration)
+* [TotalScoreProcessor first implementation](#totalscoreprocessor-first-implementation)
+* [TotalScoreProcessor test using kafka-streams-test-utils](#totalscoreprocessor-test-using-kafka-streams-test-utils)
+* [Final implementation](#final-implementation)
+* [Test this demo](#test-this-demo)
+* [Run this demo](#run-this-demo)
+* [See also](#see-also)
+
 ## First steps
 
 A bit of documentation to start with:
@@ -109,7 +120,7 @@ With this configuration:
 
 You can find all the available configuration properties documented in [Kafka Streams Properties](https://cloud.spring.io/spring-cloud-stream-binder-kafka/spring-cloud-stream-binder-kafka.html#_kafka_streams_properties).
 
-### TotalScoreProcessor first implementation
+## TotalScoreProcessor first implementation
 
 We can start with a simple implementation for a **TotalScoreProcessor** that for every **ScoreEvent** received will generate a **TotalScoreEvent** with the same value:
 
@@ -248,3 +259,5 @@ echo 'john:{"score":100}' | kcat -b localhost:9094 -P -t pub.scores -K:
 :octocat: [Spring Cloud Stream Kafka step by step](https://github.com/rogervinas/spring-cloud-stream-kafka-step-by-step)
 
 :octocat: [Spring Cloud Stream Multibinder](https://github.com/rogervinas/spring-cloud-stream-multibinder)
+
+:octocat: [Spring Cloud Stream & Kafka Streams Processor](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-processor)
