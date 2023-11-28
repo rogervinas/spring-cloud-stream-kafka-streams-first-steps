@@ -3,21 +3,22 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  id("org.springframework.boot") version "2.7.18"
-  id("io.spring.dependency-management") version "1.0.15.RELEASE"
-  kotlin("jvm") version "1.6.21"
-  kotlin("plugin.spring") version "1.6.21"
+  id("org.springframework.boot") version "3.2.0"
+  id("io.spring.dependency-management") version "1.1.4"
+  kotlin("jvm") version "1.9.21"
+  kotlin("plugin.spring") version "1.9.21"
 }
 
 group = "com.rogervinas"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_21
 
 repositories {
   mavenCentral()
+  maven { url = uri("https://repo.spring.io/milestone") }
 }
 
-val springCloudVersion = "2021.0.8"
+val springCloudVersion = "2023.0.0-RC1"
 
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -40,7 +41,7 @@ dependencyManagement {
 tasks.withType<KotlinCompile> {
   kotlinOptions {
     freeCompilerArgs = listOf("-Xjsr305=strict")
-    jvmTarget = "11"
+    jvmTarget = "21"
   }
 }
 
