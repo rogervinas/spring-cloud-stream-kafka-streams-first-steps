@@ -34,6 +34,9 @@ Let's try this time a simple example using **Kafka Streams binder**! 🤩
   * :octocat: [Spring Cloud Stream Multibinder](https://github.com/rogervinas/spring-cloud-stream-multibinder)
   * :octocat: [Spring Cloud Stream & Kafka Streams Binder + Processor API](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-processor)
 
+You can browse older versions of this repo:
+* [Spring Boot 2.x](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-first-steps/tree/spring-boot-2.x)
+
 ## First steps
 
 A bit of documentation to start with:
