@@ -3,10 +3,10 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  id("org.springframework.boot") version "2.6.2"
-  id("io.spring.dependency-management") version "1.0.11.RELEASE"
-  kotlin("jvm") version "1.6.10"
-  kotlin("plugin.spring") version "1.6.10"
+  id("org.springframework.boot") version "2.7.18"
+  id("io.spring.dependency-management") version "1.0.15.RELEASE"
+  kotlin("jvm") version "1.6.21"
+  kotlin("plugin.spring") version "1.6.21"
 }
 
 group = "com.rogervinas"
@@ -17,7 +17,7 @@ repositories {
   mavenCentral()
 }
 
-extra["springCloudVersion"] = "2021.0.0"
+val springCloudVersion = "2021.0.8"
 
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -33,7 +33,7 @@ dependencies {
 
 dependencyManagement {
   imports {
-    mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+    mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
   }
 }
 
@@ -52,5 +52,5 @@ tasks.withType<Test> {
     showExceptions = true
     showCauses = true
     showStackTraces = true
-  }	  
+  }
 }
