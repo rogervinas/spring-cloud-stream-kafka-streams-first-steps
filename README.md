@@ -255,7 +255,7 @@ docker-compose up -d
 docker-compose down
 ```
 
-Then you can use [kcat](https://github.com/edenhill/kcat) (formerly know as **kafkacat**) to produce/consume to/from **Kafka**:
+Then you can use [kcat](https://github.com/edenhill/kcat) to produce/consume to/from **Kafka**:
 ```shell
 # consume
 kcat -b localhost:9094 -C -t pub.scores -f '%k %s\n'
