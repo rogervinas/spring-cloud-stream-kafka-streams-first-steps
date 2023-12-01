@@ -221,7 +221,7 @@ After a few iterations your **TotalScoreProcessor** implementation should look s
 override fun apply(input: KStream<String, ScoreEvent>): KStream<String, TotalScoreEvent> {
   return input
     .groupByKey()
-    .windowedBy(TimeWindows.of(totalScoreWindow).grace(Duration.ofSeconds(0)))
+    .windowedBy(TimeWindows.ofSizeAndGrace(totalScoreWindow, Duration.ZERO))
     .aggregate(
       { TotalScoreEvent(0) },
       { _, scoreEvent, totalScoreEvent -> TotalScoreEvent(scoreEvent.score + totalScoreEvent.totalScore) },
