@@ -108,9 +108,9 @@ spring:
     function:
       definition: totalScoreProcessor
     stream:
-        bindings:
-          totalScoreProcessor-in-0: "pub.scores"
-          totalScoreProcessor-out-0: "pub.totals"
+      bindings:
+        totalScoreProcessor-in-0: "pub.scores"
+        totalScoreProcessor-out-0: "pub.totals"
       kafka:
         streams:
           binder:
