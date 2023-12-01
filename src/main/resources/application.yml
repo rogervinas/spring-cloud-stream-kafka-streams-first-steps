@@ -2,9 +2,9 @@ spring:
   application:
     name: "spring-cloud-stream-kafka-streams-first-steps"
   cloud:
+    function:
+      definition: totalScoreProcessor
     stream:
-      function:
-        definition: totalScoreProcessor
         bindings:
           totalScoreProcessor-in-0: "pub.scores"
           totalScoreProcessor-out-0: "pub.totals"
