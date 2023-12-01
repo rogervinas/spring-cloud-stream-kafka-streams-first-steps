@@ -126,7 +126,7 @@ spring:
 
 With this configuration:
 * **Spring Cloud Stream** will create a **Kafka Streams binder** connected to **localhost:9094**
-* We need to create a **@Bean** named **totalScoreProcessor** that should implement **Function<KStream, KStream>** interface
+* We need to create a **@Bean** named **totalScoreProcessor** that should implement `Function<KStream, KStream>` interface
   * This **@Bean** will connect a **KStream** subscribed to **pub.scores** topic to another **KStream** publishing to **pub.totals** topic
 
 You can find all the available configuration properties documented in [Kafka Streams Properties](https://cloud.spring.io/spring-cloud-stream-binder-kafka/spring-cloud-stream-binder-kafka.html#_kafka_streams_properties).
