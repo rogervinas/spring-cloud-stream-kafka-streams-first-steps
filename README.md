@@ -43,11 +43,9 @@ A bit of documentation to start with:
 
 * [Spring Cloud Kafka Streams Binder](https://cloud.spring.io/spring-cloud-stream-binder-kafka/spring-cloud-stream-binder-kafka.html#_kafka_streams_binder)
 * [Kafka Streams Documentation](https://kafka.apache.org/documentation/streams/)
-  * [Kafka Streams Developer Guide v2.7](https://kafka.apache.org/27/documentation/streams/developer-guide/)
-  * [Kafka Streams DSL v2.7](https://kafka.apache.org/27/documentation/streams/developer-guide/dsl-api.html)
-  * [Testing Kafka Streams v2.7](https://kafka.apache.org/27/documentation/streams/developer-guide/testing.html)
-
-(this demo uses **Spring Cloud 2020.0.3** that adds **Kafka Streams 2.7.1**)
+  * [Kafka Streams Developer Guide](https://kafka.apache.org/documentation/streams/developer-guide/)
+  * [Kafka Streams DSL](https://kafka.apache.org/documentation/streams/developer-guide/dsl-api.html)
+  * [Testing Kafka Streams](https://kafka.apache.org/documentation/streams/developer-guide/testing.html)
 
 ## Goal
 
