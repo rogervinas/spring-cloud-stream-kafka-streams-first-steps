@@ -1,6 +1,6 @@
 [![CI](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-first-steps/actions/workflows/gradle.yml/badge.svg)](https://github.com/rogervinas/spring-cloud-stream-kafka-streams-first-steps/actions/workflows/gradle.yml)
-![Java](https://img.shields.io/badge/Java-11-blue?labelColor=black)
-![Kotlin](https://img.shields.io/badge/Kotlin-1.6.21-blue?labelColor=black)
+![Java](https://img.shields.io/badge/Java-17-blue?labelColor=black)
+![Kotlin](https://img.shields.io/badge/Kotlin-1.9.21-blue?labelColor=black)
 ![SpringBoot](https://img.shields.io/badge/SpringBoot-2.7.8-blue?labelColor=black)
 ![SpringCloud](https://img.shields.io/badge/SpringCloud-2021.0.8-blue?labelColor=black)
 
@@ -15,7 +15,7 @@ It offers an abstraction (the **binding**) that works the same whatever undernea
 * **Amazon Kinesis**
 * ...
 
-You can also check out [Spring Cloud Stream step by step](https://github.com/rogervinas/spring-cloud-stream-step-by-step) where I got working a simple example using **Kafka binder**.
+You can also check out [Spring Cloud Stream Kafka step by step](https://github.com/rogervinas/spring-cloud-stream-step-by-step) where I got working a simple example using **Kafka binder**.
 
 Let's try this time a simple example using **Kafka Streams binder**! 🤩
 
@@ -43,11 +43,9 @@ A bit of documentation to start with:
 
 * [Spring Cloud Kafka Streams Binder](https://cloud.spring.io/spring-cloud-stream-binder-kafka/spring-cloud-stream-binder-kafka.html#_kafka_streams_binder)
 * [Kafka Streams Documentation](https://kafka.apache.org/documentation/streams/)
-  * [Kafka Streams Developer Guide v2.7](https://kafka.apache.org/27/documentation/streams/developer-guide/)
-  * [Kafka Streams DSL v2.7](https://kafka.apache.org/27/documentation/streams/developer-guide/dsl-api.html)
-  * [Testing Kafka Streams v2.7](https://kafka.apache.org/27/documentation/streams/developer-guide/testing.html)
-
-(this demo uses **Spring Cloud 2020.0.3** that adds **Kafka Streams 2.7.1**)
+  * [Kafka Streams Developer Guide](https://kafka.apache.org/documentation/streams/developer-guide/)
+  * [Kafka Streams DSL](https://kafka.apache.org/documentation/streams/developer-guide/dsl-api.html)
+  * [Testing Kafka Streams](https://kafka.apache.org/documentation/streams/developer-guide/testing.html)
 
 ## Goal
 
@@ -60,7 +58,7 @@ We want to implement this flow:
 
 ## Integration Test
 
-First we create a project using this [spring initializr configuration](https://start.spring.io/#!type=gradle-project&language=kotlin&platformVersion=2.5.4&packaging=jar&jvmVersion=11&groupId=com.rogervinas&artifactId=springcloudstreamkafkastreamsbinder&name=springcloudstreamkafkastreamsbinder&description=Spring%20Cloud%20Streams%20%26%20Kafka%20Streams%20Binder&packageName=com.rogervinas.springcloudstreamkafkastreamsbinder&dependencies=cloud-stream) and we add **Kafka Streams** binder dependency **spring-cloud-stream-binder-kafka-streams**.
+First we create a project using this [spring initializr configuration](https://start.spring.io/#!type=gradle-project&language=kotlin&packaging=jar&groupId=com.rogervinas&artifactId=springcloudstreamkafkastreamsbinder&name=springcloudstreamkafkastreamsbinder&description=Spring%20Cloud%20Streams%20%26%20Kafka%20Streams%20Binder&packageName=com.rogervinas.springcloudstreamkafkastreamsbinder&dependencies=cloud-stream) and we add **Kafka Streams** binder dependency **spring-cloud-stream-binder-kafka-streams**.
 
 Using [testcontainers](https://www.testcontainers.org/) and [docker-compose](docker-compose.yml) with a **Kafka** container, we write the following **integration test**:
 
@@ -107,12 +105,14 @@ spring:
   application:
     name: "spring-cloud-stream-kafka-streams-first-steps"
   cloud:
+    function:
+      definition: totalScoreProcessor
     stream:
-      function:
-        definition: totalScoreProcessor
-        bindings:
-          totalScoreProcessor-in-0: "pub.scores"
-          totalScoreProcessor-out-0: "pub.totals"
+      bindings:
+        totalScoreProcessor-in-0:
+          destination: "pub.scores"
+        totalScoreProcessor-out-0:
+          destination: "pub.totals"
       kafka:
         streams:
           binder:
@@ -221,7 +221,7 @@ After a few iterations your **TotalScoreProcessor** implementation should look s
 override fun apply(input: KStream<String, ScoreEvent>): KStream<String, TotalScoreEvent> {
   return input
     .groupByKey()
-    .windowedBy(TimeWindows.of(totalScoreWindow).grace(Duration.ofSeconds(0)))
+    .windowedBy(TimeWindows.ofSizeAndGrace(totalScoreWindow, Duration.ZERO))
     .aggregate(
       { TotalScoreEvent(0) },
       { _, scoreEvent, totalScoreEvent -> TotalScoreEvent(scoreEvent.score + totalScoreEvent.totalScore) },
@@ -239,7 +239,7 @@ Note that we use the [suppression operator](https://kafka.apache.org/27/document
 
 Now you can play around with [Kafka Streams DSL](https://kafka.apache.org/documentation/streams/developer-guide/dsl-api) and do more complicated stuff!
 
-Happy coding!
+Happy coding! 💙
 
 ## Test this demo
 
