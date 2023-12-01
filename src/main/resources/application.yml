@@ -6,8 +6,10 @@ spring:
       definition: totalScoreProcessor
     stream:
       bindings:
-        totalScoreProcessor-in-0: "pub.scores"
-        totalScoreProcessor-out-0: "pub.totals"
+        totalScoreProcessor-in-0:
+          destination: "pub.scores"
+        totalScoreProcessor-out-0:
+          destination: "pub.totals"
       kafka:
         streams:
           binder:
