@@ -20,6 +20,12 @@ repositories {
 val springCloudVersion = "2023.0.2"
 val testContainersVersion = "1.19.8"
 
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
+
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -40,9 +46,8 @@ dependencyManagement {
 }
 
 tasks.withType<KotlinCompile> {
-  kotlinOptions {
+  compilerOptions {
     freeCompilerArgs = listOf("-Xjsr305=strict")
-    jvmTarget = "21"
   }
 }
 
