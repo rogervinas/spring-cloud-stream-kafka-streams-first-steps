@@ -171,6 +171,8 @@ Here it is one way to create a **TopologyTestDriver** from [kafka-streams-test-u
 @BeforeEach
 fun beforeEach() {
   val stringSerde = Serdes.StringSerde()
+  val scoreEventSerializer = JsonSerde(ScoreEvent::class.java).serializer()
+  val totalScoreEventDeserializer = JsonSerde(TotalScoreEvent::class.java).deserializer()
   val streamsBuilder = StreamsBuilder()
 
   // This way we test MyTotalScoreProcessor
@@ -187,8 +189,8 @@ fun beforeEach() {
   }
   val topology = streamsBuilder.build()
   topologyTestDriver = TopologyTestDriver(topology, config)
-  topicIn = topologyTestDriver.createInputTopic(TOPIC_IN, stringSerde.serializer(), JsonSerde(ScoreEvent::class.java).serializer())
-  topicOut = topologyTestDriver.createOutputTopic(TOPIC_OUT, stringSerde.deserializer(), JsonSerde(TotalScoreEvent::class.java).deserializer())
+  topicIn = topologyTestDriver.createInputTopic(TOPIC_IN, stringSerde.serializer(), scoreEventSerializer)
+  topicOut = topologyTestDriver.createOutputTopic(TOPIC_OUT, stringSerde.deserializer(), totalScoreEventDeserializer)
 }
 ```
 
