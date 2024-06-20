@@ -8,7 +8,6 @@ import org.apache.kafka.common.serialization.StringSerializer
 import java.util.Properties
 
 class KafkaProducerHelper(bootstrapServers: String) {
-
   private val producer: Producer<String, String>
 
   init {
@@ -20,7 +19,11 @@ class KafkaProducerHelper(bootstrapServers: String) {
   }
 
   @Throws(Exception::class)
-  fun send(topic: String?, key: String, body: String) {
+  fun send(
+    topic: String?,
+    key: String,
+    body: String,
+  ) {
     producer.send(ProducerRecord(topic, key, body)).get()
     producer.flush()
   }

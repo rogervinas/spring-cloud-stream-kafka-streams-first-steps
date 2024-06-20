@@ -24,7 +24,6 @@ private const val USERNAME_2 = "user2"
 private val TOTAL_SCORE_WINDOW = Duration.ofSeconds(15)
 
 internal class MyTotalScoreProcessorTest {
-
   private lateinit var topologyTestDriver: TopologyTestDriver
   private lateinit var topicIn: TestInputTopic<String, ScoreEvent>
   private lateinit var topicOut: TestOutputTopic<String, TotalScoreEvent>
@@ -32,23 +31,26 @@ internal class MyTotalScoreProcessorTest {
   @BeforeEach
   fun beforeEach() {
     val stringSerde = Serdes.StringSerde()
+    val scoreEventSerializer = JsonSerde(ScoreEvent::class.java).serializer()
+    val totalScoreEventDeserializer = JsonSerde(TotalScoreEvent::class.java).deserializer()
     val streamsBuilder = StreamsBuilder()
 
     MyTotalScoreProcessor(TOTAL_SCORE_WINDOW)
-          .apply(streamsBuilder.stream(TOPIC_IN))
-          .to(TOPIC_OUT)
+      .apply(streamsBuilder.stream(TOPIC_IN))
+      .to(TOPIC_OUT)
 
-    val config = Properties().apply {
-      setProperty(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, stringSerde.javaClass.name)
-      setProperty(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerde::class.java.name)
-      setProperty(StreamsConfig.APPLICATION_ID_CONFIG, "test")
-      setProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "test-server")
-      setProperty(JsonDeserializer.TRUSTED_PACKAGES, "*")
-    }
+    val config =
+      Properties().apply {
+        setProperty(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, stringSerde.javaClass.name)
+        setProperty(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerde::class.java.name)
+        setProperty(StreamsConfig.APPLICATION_ID_CONFIG, "test")
+        setProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "test-server")
+        setProperty(JsonDeserializer.TRUSTED_PACKAGES, "*")
+      }
     val topology = streamsBuilder.build()
     topologyTestDriver = TopologyTestDriver(topology, config)
-    topicIn = topologyTestDriver.createInputTopic(TOPIC_IN, stringSerde.serializer(), JsonSerde(ScoreEvent::class.java).serializer())
-    topicOut = topologyTestDriver.createOutputTopic(TOPIC_OUT, stringSerde.deserializer(), JsonSerde(TotalScoreEvent::class.java).deserializer())
+    topicIn = topologyTestDriver.createInputTopic(TOPIC_IN, stringSerde.serializer(), scoreEventSerializer)
+    topicOut = topologyTestDriver.createOutputTopic(TOPIC_OUT, stringSerde.deserializer(), totalScoreEventDeserializer)
   }
 
   @AfterEach
@@ -67,10 +69,12 @@ internal class MyTotalScoreProcessorTest {
     // Send at least one more message so the previous window is closed
     topicIn.pipeInput(USERNAME_1, ScoreEvent(1))
 
-    assertThat(topicOut.readKeyValuesToList()).singleElement().satisfies(Consumer { topicOutMessage ->
-      assertThat(topicOutMessage.key).isEqualTo(USERNAME_1)
-      assertThat(topicOutMessage.value).isEqualTo(TotalScoreEvent(75))
-    })
+    assertThat(topicOut.readKeyValuesToList()).singleElement().satisfies(
+      Consumer { topicOutMessage ->
+        assertThat(topicOutMessage.key).isEqualTo(USERNAME_1)
+        assertThat(topicOutMessage.value).isEqualTo(TotalScoreEvent(75))
+      },
+    )
   }
 
   @Test
@@ -89,10 +93,12 @@ internal class MyTotalScoreProcessorTest {
     topicIn.pipeInput(USERNAME_2, ScoreEvent(1))
 
     assertThat(topicOut.queueSize).isEqualTo(2)
-    assertThat(topicOut.readKeyValuesToMap()).satisfies(Consumer { topicOutMessages ->
-      assertThat(topicOutMessages[USERNAME_1]).isEqualTo(TotalScoreEvent(75))
-      assertThat(topicOutMessages[USERNAME_2]).isEqualTo(TotalScoreEvent(86))
-    })
+    assertThat(topicOut.readKeyValuesToMap()).satisfies(
+      Consumer { topicOutMessages ->
+        assertThat(topicOutMessages[USERNAME_1]).isEqualTo(TotalScoreEvent(75))
+        assertThat(topicOutMessages[USERNAME_2]).isEqualTo(TotalScoreEvent(86))
+      },
+    )
   }
 
   @Test
@@ -114,10 +120,12 @@ internal class MyTotalScoreProcessorTest {
     topicIn.pipeInput(USERNAME_2, ScoreEvent(48))
 
     assertThat(topicOut.queueSize).isEqualTo(2)
-    assertThat(topicOut.readKeyValuesToMap()).satisfies(Consumer { topicOutMessages ->
-      assertThat(topicOutMessages[USERNAME_1]).isEqualTo(TotalScoreEvent(75))
-      assertThat(topicOutMessages[USERNAME_2]).isEqualTo(TotalScoreEvent(86))
-    })
+    assertThat(topicOut.readKeyValuesToMap()).satisfies(
+      Consumer { topicOutMessages ->
+        assertThat(topicOutMessages[USERNAME_1]).isEqualTo(TotalScoreEvent(75))
+        assertThat(topicOutMessages[USERNAME_2]).isEqualTo(TotalScoreEvent(86))
+      },
+    )
 
     topicIn.advanceTime(TOTAL_SCORE_WINDOW.plusMillis(100))
 
@@ -126,9 +134,11 @@ internal class MyTotalScoreProcessorTest {
     topicIn.pipeInput(USERNAME_2, ScoreEvent(1))
 
     assertThat(topicOut.queueSize).isEqualTo(2)
-    assertThat(topicOut.readKeyValuesToMap()).satisfies(Consumer { topicOutMessages ->
-      assertThat(topicOutMessages[USERNAME_1]).isEqualTo(TotalScoreEvent(84))
-      assertThat(topicOutMessages[USERNAME_2]).isEqualTo(TotalScoreEvent(95))
-    })
+    assertThat(topicOut.readKeyValuesToMap()).satisfies(
+      Consumer { topicOutMessages ->
+        assertThat(topicOutMessages[USERNAME_1]).isEqualTo(TotalScoreEvent(84))
+        assertThat(topicOutMessages[USERNAME_2]).isEqualTo(TotalScoreEvent(95))
+      },
+    )
   }
 }

@@ -1,17 +1,18 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-import org.gradle.api.tasks.testing.logging.TestLogEvent.*
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
+import org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
+import org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED
 
 plugins {
   id("org.springframework.boot") version "3.3.0"
   id("io.spring.dependency-management") version "1.1.5"
   kotlin("jvm") version "2.0.0"
   kotlin("plugin.spring") version "2.0.0"
+  id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
 }
 
 group = "com.rogervinas"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_21
 
 repositories {
   mavenCentral()
@@ -19,12 +20,6 @@ repositories {
 
 val springCloudVersion = "2023.0.2"
 val testContainersVersion = "1.19.8"
-
-java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(21)
-  }
-}
 
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -45,9 +40,15 @@ dependencyManagement {
   }
 }
 
-tasks.withType<KotlinCompile> {
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
+
+kotlin {
   compilerOptions {
-    freeCompilerArgs = listOf("-Xjsr305=strict")
+    freeCompilerArgs.addAll("-Xjsr305=strict")
   }
 }
 

@@ -23,9 +23,7 @@ private const val USERNAME_2 = "user2"
 @SpringBootTest
 @Testcontainers
 internal class MyApplicationIntegrationTest {
-
   companion object {
-
     @Container
     val container = DockerComposeContainerHelper().createContainer()
   }
@@ -63,9 +61,11 @@ internal class MyApplicationIntegrationTest {
     val records = kafkaConsumerHelper.consumeAtLeast(2, Duration.ofMinutes(1))
 
     assertThat(records).hasSize(2)
-    assertThat(records.associate { record -> record.key() to record.value() }).satisfies(Consumer { valuesByKey ->
-      JSONAssert.assertEquals("{\"totalScore\": 90}", valuesByKey[USERNAME_1], true)
-      JSONAssert.assertEquals("{\"totalScore\": 120}", valuesByKey[USERNAME_2], true)
-    })
+    assertThat(records.associate { record -> record.key() to record.value() }).satisfies(
+      Consumer { valuesByKey ->
+        JSONAssert.assertEquals("{\"totalScore\": 90}", valuesByKey[USERNAME_1], true)
+        JSONAssert.assertEquals("{\"totalScore\": 120}", valuesByKey[USERNAME_2], true)
+      },
+    )
   }
 }

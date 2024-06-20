@@ -14,11 +14,11 @@ import java.time.Duration
 import java.util.function.Function
 
 data class ScoreEvent(val score: Int)
+
 data class TotalScoreEvent(val totalScore: Int)
 
 class MyTotalScoreProcessor(private val totalScoreWindow: Duration) :
   Function<KStream<String, ScoreEvent>, KStream<String, TotalScoreEvent>> {
-
   override fun apply(input: KStream<String, ScoreEvent>): KStream<String, TotalScoreEvent> {
     return input
       .groupByKey()
@@ -28,7 +28,7 @@ class MyTotalScoreProcessor(private val totalScoreWindow: Duration) :
         { _, scoreEvent, totalScoreEvent -> TotalScoreEvent(scoreEvent.score + totalScoreEvent.totalScore) },
         Materialized.`as`<String?, TotalScoreEvent?, WindowStore<Bytes, ByteArray>?>("total-score")
           .withKeySerde(Serdes.StringSerde())
-          .withValueSerde(JsonSerde(TotalScoreEvent::class.java))
+          .withValueSerde(JsonSerde(TotalScoreEvent::class.java)),
       )
       .suppress(Suppressed.untilWindowCloses(unbounded()))
       .toStream()

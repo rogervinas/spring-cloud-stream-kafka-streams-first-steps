@@ -9,8 +9,11 @@ import java.util.function.Function
 
 @Configuration
 class MyApplicationConfiguration {
-
   @Bean
-  fun totalScoreProcessor(@Value("\${total-score.window}") totalScoreWindow: Duration):
-        Function<KStream<String, ScoreEvent>, KStream<String, TotalScoreEvent>> = MyTotalScoreProcessor(totalScoreWindow)
+  fun totalScoreProcessor(
+    @Value("\${total-score.window}") totalScoreWindow: Duration,
+  ): Function<KStream<String, ScoreEvent>, KStream<String, TotalScoreEvent>> =
+    MyTotalScoreProcessor(
+      totalScoreWindow,
+    )
 }
