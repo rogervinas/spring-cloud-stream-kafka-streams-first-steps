@@ -19,7 +19,7 @@ repositories {
 }
 
 val springCloudVersion = "2023.0.3"
-val testContainersVersion = "1.20.0"
+val testContainersVersion = "1.20.1"
 
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect")
