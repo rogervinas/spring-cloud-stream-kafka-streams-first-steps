@@ -117,7 +117,7 @@ spring:
         streams:
           binder:
             applicationId: "${spring.application.name}"
-            brokers: "localhost:9094"
+            brokers: "localhost:9092"
             configuration:
               default:
                 key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
@@ -125,7 +125,7 @@ spring:
 ```
 
 With this configuration:
-* **Spring Cloud Stream** will create a **Kafka Streams binder** connected to **localhost:9094**
+* **Spring Cloud Stream** will create a **Kafka Streams binder** connected to **localhost:9092**
 * We need to create a **@Bean** named **totalScoreProcessor** that should implement `Function<KStream, KStream>` interface
   * This **@Bean** will connect a **KStream** subscribed to **pub.scores** topic to another **KStream** publishing to **pub.totals** topic
 
@@ -260,9 +260,9 @@ docker-compose down
 Then you can use [kcat](https://github.com/edenhill/kcat) to produce/consume to/from **Kafka**:
 ```shell
 # consume
-kcat -b localhost:9094 -C -t pub.scores -f '%k %s\n'
-kcat -b localhost:9094 -C -t pub.totals -f '%k %s\n'
+kcat -b localhost:9092 -C -t pub.scores -f '%k %s\n'
+kcat -b localhost:9092 -C -t pub.totals -f '%k %s\n'
 
 # produce
-echo 'john:{"score":100}' | kcat -b localhost:9094 -P -t pub.scores -K:
+echo 'john:{"score":100}' | kcat -b localhost:9092 -P -t pub.scores -K:
 ```
