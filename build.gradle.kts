@@ -27,6 +27,9 @@ dependencies {
   implementation("org.springframework.cloud:spring-cloud-stream-binder-kafka-streams")
   implementation("org.springframework.boot:spring-boot-starter-jackson")
 
+  // TODO remove when we can use Jackson 3
+  implementation("org.springframework.boot:spring-boot-jackson2")
+
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.apache.kafka:kafka-streams-test-utils")
   testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
