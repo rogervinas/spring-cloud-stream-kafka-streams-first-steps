@@ -10,8 +10,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.kafka.support.serializer.JsonDeserializer
-import org.springframework.kafka.support.serializer.JsonSerde
+import org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+import org.springframework.kafka.support.serializer.JacksonJsonSerde
 import java.time.Duration
 import java.util.Properties
 import java.util.function.Consumer
@@ -31,8 +31,8 @@ internal class MyTotalScoreProcessorTest {
   @BeforeEach
   fun beforeEach() {
     val stringSerde = Serdes.StringSerde()
-    val scoreEventSerializer = JsonSerde(ScoreEvent::class.java).serializer()
-    val totalScoreEventDeserializer = JsonSerde(TotalScoreEvent::class.java).deserializer()
+    val scoreEventSerializer = JacksonJsonSerde(ScoreEvent::class.java).serializer()
+    val totalScoreEventDeserializer = JacksonJsonSerde(TotalScoreEvent::class.java).deserializer()
     val streamsBuilder = StreamsBuilder()
 
     MyTotalScoreProcessor(TOTAL_SCORE_WINDOW)
@@ -42,10 +42,10 @@ internal class MyTotalScoreProcessorTest {
     val config =
       Properties().apply {
         setProperty(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, stringSerde.javaClass.name)
-        setProperty(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerde::class.java.name)
+        setProperty(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JacksonJsonSerde::class.java.name)
         setProperty(StreamsConfig.APPLICATION_ID_CONFIG, "test")
         setProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "test-server")
-        setProperty(JsonDeserializer.TRUSTED_PACKAGES, "*")
+        setProperty(JacksonJsonDeserializer.TRUSTED_PACKAGES, "*")
       }
     val topology = streamsBuilder.build()
     topologyTestDriver = TopologyTestDriver(topology, config)

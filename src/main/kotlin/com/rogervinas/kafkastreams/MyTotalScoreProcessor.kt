@@ -9,7 +9,7 @@ import org.apache.kafka.streams.kstream.Suppressed
 import org.apache.kafka.streams.kstream.Suppressed.BufferConfig.unbounded
 import org.apache.kafka.streams.kstream.TimeWindows
 import org.apache.kafka.streams.state.WindowStore
-import org.springframework.kafka.support.serializer.JsonSerde
+import org.springframework.kafka.support.serializer.JacksonJsonSerde
 import java.time.Duration
 import java.util.function.Function
 
@@ -28,7 +28,7 @@ class MyTotalScoreProcessor(private val totalScoreWindow: Duration) :
         { _, scoreEvent, totalScoreEvent -> TotalScoreEvent(scoreEvent.score + totalScoreEvent.totalScore) },
         Materialized.`as`<String?, TotalScoreEvent?, WindowStore<Bytes, ByteArray>?>("total-score")
           .withKeySerde(Serdes.StringSerde())
-          .withValueSerde(JsonSerde(TotalScoreEvent::class.java)),
+          .withValueSerde(JacksonJsonSerde(TotalScoreEvent::class.java)),
       )
       .suppress(Suppressed.untilWindowCloses(unbounded()))
       .toStream()

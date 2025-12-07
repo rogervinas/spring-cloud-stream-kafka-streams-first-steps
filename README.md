@@ -171,8 +171,8 @@ Here it is one way to create a **TopologyTestDriver** from [kafka-streams-test-u
 @BeforeEach
 fun beforeEach() {
   val stringSerde = Serdes.StringSerde()
-  val scoreEventSerializer = JsonSerde(ScoreEvent::class.java).serializer()
-  val totalScoreEventDeserializer = JsonSerde(TotalScoreEvent::class.java).deserializer()
+  val scoreEventSerializer = JacksonJsonSerde(ScoreEvent::class.java).serializer()
+  val totalScoreEventDeserializer = JacksonJsonSerde(TotalScoreEvent::class.java).deserializer()
   val streamsBuilder = StreamsBuilder()
 
   // This way we test MyTotalScoreProcessor
@@ -182,10 +182,10 @@ fun beforeEach() {
 
   val config = Properties().apply {
     setProperty(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, stringSerde.javaClass.name)
-    setProperty(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerde::class.java.name)
+    setProperty(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JacksonJsonSerde::class.java.name)
     setProperty(StreamsConfig.APPLICATION_ID_CONFIG, "test")
     setProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "test-server")
-    setProperty(JsonDeserializer.TRUSTED_PACKAGES, "*")
+    setProperty(JacksonJsonDeserializer.TRUSTED_PACKAGES, "*")
   }
   val topology = streamsBuilder.build()
   topologyTestDriver = TopologyTestDriver(topology, config)
@@ -229,7 +229,7 @@ override fun apply(input: KStream<String, ScoreEvent>): KStream<String, TotalSco
       { _, scoreEvent, totalScoreEvent -> TotalScoreEvent(scoreEvent.score + totalScoreEvent.totalScore) },
       Materialized.`as`<String?, TotalScoreEvent?, WindowStore<Bytes, ByteArray>?>("total-score")
         .withKeySerde(Serdes.StringSerde())
-        .withValueSerde(JsonSerde(TotalScoreEvent::class.java))
+        .withValueSerde(JacksonJsonSerde(TotalScoreEvent::class.java))
     )
     .suppress(Suppressed.untilWindowCloses(unbounded()))
     .toStream()
