@@ -152,7 +152,7 @@ class MyApplicationConfiguration {
 }
 ```
 
-💡 We are using **Spring Cloud Stream**'s default serialization/deserialization of **Kotlin** data classes to Json. In order for this to work we need to add **com.fasterxml.jackson.module:jackson-module-kotlin** dependency.
+💡 We are using **Spring Cloud Stream**'s default serialization/deserialization of **Kotlin** data classes to Json. In order for this to work we need to add **tools.jackson.module:jackson-module-kotlin** dependency.
 
 This implementation is not fulfilling our goal yet, just execute [MyApplicationIntegrationTest](src/test/kotlin/com/rogervinas/kafkastreams/MyApplicationIntegrationTest.kt) and see it still failing! 😓
 
