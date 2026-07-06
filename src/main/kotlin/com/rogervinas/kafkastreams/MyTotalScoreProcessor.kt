@@ -1,5 +1,6 @@
 package com.rogervinas.kafkastreams
 
+import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.common.utils.Bytes
 import org.apache.kafka.streams.KeyValue
@@ -25,10 +26,10 @@ class MyTotalScoreProcessor(private val totalScoreWindow: Duration) :
       .windowedBy(TimeWindows.ofSizeAndGrace(totalScoreWindow, Duration.ZERO))
       .aggregate(
         { TotalScoreEvent(0) },
-        { _, scoreEvent, totalScoreEvent -> TotalScoreEvent(scoreEvent.score + totalScoreEvent.totalScore) },
+        { _, scoreEvent, totalScoreEvent -> TotalScoreEvent(scoreEvent.score + totalScoreEvent!!.totalScore) },
         Materialized.`as`<String?, TotalScoreEvent?, WindowStore<Bytes, ByteArray>?>("total-score")
           .withKeySerde(Serdes.StringSerde())
-          .withValueSerde(JacksonJsonSerde(TotalScoreEvent::class.java)),
+          .withValueSerde(JacksonJsonSerde(TotalScoreEvent::class.java) as Serde<TotalScoreEvent?>?),
       )
       .suppress(Suppressed.untilWindowCloses(unbounded()))
       .toStream()
